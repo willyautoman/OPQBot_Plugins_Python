@@ -11,7 +11,7 @@ import datetime
 import iotbot.decorators as deco
 import schedule
 from iotbot import IOTBOT, Action, GroupMsg, EventMsg
-from Utils import utils, SQLiteUtils, BaiduApi, setuUtil, ciyunUtil, weatherUtil
+from Utils import utils, SQLiteUtils, BaiduApi, ciyunUtil, weatherUtil
 
 
 bot = IOTBOT(1328382485, log_file=True)

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="fbc4467e-1cef-47a1-bd5a-c43fad864606" name="TencetCloud">
+        <fileTransfer accessType="SFTP" host="152.136.95.29" port="22" sshConfigId="867de199-48b2-486f-a1c0-22668d2ab883" sshConfig="ubuntu@152.136.95.29:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
