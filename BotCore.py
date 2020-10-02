@@ -9,7 +9,6 @@ import time
 from time import sleep
 import datetime
 import iotbot.decorators as deco
-import requests
 import schedule
 from iotbot import IOTBOT, Action, GroupMsg, EventMsg
 from Utils import utils, SQLiteUtils, BaiduApi, setuUtil, ciyunUtil, weatherUtil
