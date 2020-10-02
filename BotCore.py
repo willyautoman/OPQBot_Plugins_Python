@@ -91,18 +91,6 @@ def get_record(msg: GroupMsg):
             f.close()
 
 
-#机器人聊天，如有需要，自己取消注释
-# @bot.on_group_msg
-# @deco.only_this_msg_type("TextMsg")
-# def auto_reply(msg: GroupMsg):
-#     rand = random.randint(0, 40)
-#     print(rand)
-#     if rand % 25 == 0:  #自己计算触发概率
-#         question = msg.Content
-#         reply = main.chat(question)
-#         action.send_group_text_msg(msg.FromGroupId, reply, atUser=msg.FromUserId)
-
-
 @bot.on_group_msg
 @deco.in_content("昨日词云")
 def send_ciyun(msg: GroupMsg):
@@ -136,13 +124,25 @@ def send_waether(msg:GroupMsg):
         coding = base64.b64encode(f.read()).decode()
         action.send_group_pic_msg(toUser=msg.FromGroupId, picBase64Buf=coding)
 
+@bot.on_group_msg
+@deco.in_content("card(.*?)")
+def send_waether_card(msg:GroupMsg):
+    pattern = re.compile(r'card(.*?)')
+    m = pattern.match(msg.Content)
+    city = m.group(1)
+    weather = utils.GetWeather(city)
+    File_name = weatherUtil.Draw(weather)
+    with open('weather_pic/'+File_name, 'rb')as f:
+        coding = base64.b64encode(f.read()).decode()
+        action.send_group_pic_msg(toUser=msg.FromGroupId, picBase64Buf=coding)
+
 
 @bot.on_group_msg
 def revoke_msg(msg: GroupMsg):
     if msg.FromUserId == 1328382485 and msg.MsgType == 'PicMsg':
         Content = json.loads(msg.Content)['Content']
         if Content == '30S后销毁该消息，请快点冲，谢谢':
-            print(Content)
+            # print(Content)
             time.sleep(30)
             action.revoke_msg(msg.FromGroupId, msg.MsgSeq, msg.MsgRandom)
 
@@ -150,7 +150,9 @@ def revoke_msg(msg: GroupMsg):
 @deco.in_content(".github")
 @deco.in_content("github")
 def send_proj(msg:GroupMsg):
-    text = '本机器人源码：'+'https://github.com/willyautoman/OPQBotPlugins-Python'+ '\n看后记得star一下哦'
+    if msg.FromUserId == 1328382485:
+        return
+    text = '本机器人源码：'+'https://github.com/willyautoman/OPQBot_Plugins_Python'+ '\n看后记得star一下哦'
     action.send_group_text_msg(toUser=msg.FromGroupId,content=text)
 
 @bot.on_group_msg
@@ -202,13 +204,13 @@ def send_xingzuo(a: GroupMsg):
 #新成员入群欢迎
 @bot.on_event
 def on_people_in_group(event: EventMsg):
-    if event.MsgType == 'ON_EVENT_GROUP_JOIN' and event.FromUin == '#####':   #此处填入需要发送欢迎的群号
+    if event.MsgType == 'ON_EVENT_GROUP_JOIN' and event.FromUin == '757360354':   #此处填入需要发送欢迎的群号
 
         UserName = event.EventData['UserName']
         UserID = event.EventData['UserID']
         with open('bqb//' + str(random.randint(1,161)) + '.jpg', 'rb') as f:
             coding = base64.b64encode(f.read()).decode()
-            text = "\n[表情109][表情109]欢迎2020级萌新：%s入群[表情109][表情109]\n入群请先修改群名片（如：2020-呼市-张三）\n 有什么问题请尽管提问，在线的大二、大三的学长学姐们会很热♂情的帮你们解答的"%UserName
+            text = "\n[表情109][表情109]欢迎萌新：%s入群[表情109][表情109]\n入群请先修改群名片（如：ubuntu-XXX）\n 有什么问题请尽管提问,老撕鸡们会很热♂情的帮你们解答的"%UserName
             action.send_group_pic_msg(toUser=event.FromUin,content=text,atUser=UserID,picBase64Buf=coding)
 
 @bot.on_group_msg
