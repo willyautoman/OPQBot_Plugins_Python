@@ -7,15 +7,15 @@ import re
 import threading
 import time
 from time import sleep
-import datetime
+
 import iotbot.decorators as deco
 import schedule
 from iotbot import IOTBOT, Action, GroupMsg, EventMsg
+
 from Utils import utils, SQLiteUtils, BaiduApi, ciyunUtil, weatherUtil
 
-
 bot = IOTBOT(1328382485, log_file=True)
-action = Action(bot,queue=True,queue_delay=2)
+action = Action(bot, queue=True, queue_delay=2)
 
 
 def getGroupList():
@@ -97,7 +97,7 @@ def send_ciyun(msg: GroupMsg):
     print("开始生成词云")
     today = datetime.date.today()
     oneday = datetime.timedelta(days=1)
-    yesterday = (today - oneday).strftime("%Y%m%d") # 昨天的日期
+    yesterday = (today - oneday).strftime("%Y%m%d")  # 昨天的日期
     groupList = getGroupList()
     for group in groupList:
         filename = str(group) + '_' + yesterday + '.txt'
@@ -109,32 +109,46 @@ def send_ciyun(msg: GroupMsg):
 @bot.on_group_msg
 @deco.in_content("色图")
 def send_setu(msg: GroupMsg):
-    action.send_group_pic_msg(toUser=msg.FromGroupId, content='30S后销毁该消息，请快点冲，谢谢', picUrl='http://127.0.0.1:8080/getContent')
+    action.send_group_pic_msg(toUser=msg.FromGroupId, content='30S后销毁该消息，请快点冲，谢谢',
+                              picUrl='http://127.0.0.1:8080/getContent')
+
 
 @bot.on_group_msg
 @deco.in_content("(.*?)市天气")
-def send_waether(msg:GroupMsg):
-    action.send_group_text_msg(toUser=msg.FromGroupId,content='正在查询中，请稍后······')
+def send_waether(msg: GroupMsg):
+    action.send_group_text_msg(toUser=msg.FromGroupId, content='正在查询中，请稍后······')
     pattern = re.compile(r'(.*?)市天气')
     m = pattern.match(msg.Content)
     city = m.group(1)
     weather = utils.GetWeather(city)
     File_name = weatherUtil.Draw(weather)
-    with open('weather_pic/'+File_name, 'rb')as f:
+    with open('weather_pic/' + File_name, 'rb')as f:
         coding = base64.b64encode(f.read()).decode()
         action.send_group_pic_msg(toUser=msg.FromGroupId, picBase64Buf=coding)
 
+
 @bot.on_group_msg
 @deco.in_content("card(.*?)")
-def send_waether_card(msg:GroupMsg):
+def send_waether_card(msg: GroupMsg):
     pattern = re.compile(r'card(.*?)')
     m = pattern.match(msg.Content)
     city = m.group(1)
     weather = utils.GetWeather(city)
     File_name = weatherUtil.Draw(weather)
-    with open('weather_pic/'+File_name, 'rb')as f:
+    with open('weather_pic/' + File_name, 'rb')as f:
         coding = base64.b64encode(f.read()).decode()
         action.send_group_pic_msg(toUser=msg.FromGroupId, picBase64Buf=coding)
+
+
+@bot.on_group_msg
+@deco.in_content("赞我")
+def send_like(msg: GroupMsg):
+    UserUin = msg.FromUserId
+    if UserUin != 1328382485:
+        action.send_group_text_msg(toUser=msg.FromGroupId, content=msg.FromNickName + '，正在赞你，请稍后')
+        for i in range(1, 50):
+            action.like(userid=UserUin)
+        action.send_group_text_msg(toUser=msg.FromGroupId, content=msg.FromNickName + ',赞完了')
 
 
 @bot.on_group_msg
@@ -146,14 +160,15 @@ def revoke_msg(msg: GroupMsg):
             time.sleep(30)
             action.revoke_msg(msg.FromGroupId, msg.MsgSeq, msg.MsgRandom)
 
+
 @bot.on_group_msg
 @deco.in_content(".github")
 @deco.in_content("github")
-def send_proj(msg:GroupMsg):
-    if msg.FromUserId == 1328382485:
-        return
-    text = '本机器人源码：'+'https://github.com/willyautoman/OPQBot_Plugins_Python'+ '\n看后记得star一下哦'
-    action.send_group_text_msg(toUser=msg.FromGroupId,content=text)
+@deco.not_botself
+def send_proj(msg: GroupMsg):
+    text = '本机器人源码：' + 'https://github.com/willyautoman/OPQBot_Plugins_Python' + '\n看后记得star一下哦'
+    action.send_group_text_msg(toUser=msg.FromGroupId, content=text)
+
 
 @bot.on_group_msg
 @deco.in_content("彩虹屁")
@@ -163,13 +178,13 @@ def send_chp(a: GroupMsg):
     action.send_group_text_msg(toUser=a.FromGroupId, content=text)
 
 
-
 @bot.on_group_msg
 def send_shanzhao(a: GroupMsg):
     if a.MsgType == 'PicMsg' and 'GroupPic' not in a.Content:
         Contents = json.loads(a.data.get('Content'))
         action.send_group_pic_msg(toUser=a.FromGroupId, content='震惊！居然有人敢在这个群里发闪照！', picUrl=Contents['Url'],
-                                      fileMd5=Contents['FileMd5'])
+                                  fileMd5=Contents['FileMd5'])
+
 
 @bot.on_group_msg
 @deco.in_content("我想对你说")
@@ -188,7 +203,7 @@ def send_voice(a: GroupMsg):
 def send_qqcys(msg: GroupMsg):
     text = utils.get_cjx(msg)
     print(text)
-    action.send_group_text_msg(toUser=msg.FromGroupId, content=text,atUser=msg.FromUserId)
+    action.send_group_text_msg(toUser=msg.FromGroupId, content=text, atUser=msg.FromUserId)
 
 
 @bot.on_group_msg
@@ -201,21 +216,23 @@ def send_xingzuo(a: GroupMsg):
         for text in texts:
             action.send_group_text_msg(toUser=a.FromGroupId, content=text)
 
-#新成员入群欢迎
+
+# 新成员入群欢迎
 @bot.on_event
 def on_people_in_group(event: EventMsg):
-    if event.MsgType == 'ON_EVENT_GROUP_JOIN' and event.FromUin == '757360354':   #此处填入需要发送欢迎的群号
+    if event.MsgType == 'ON_EVENT_GROUP_JOIN' and event.FromUin == '757360354':  # 此处填入需要发送欢迎的群号
 
         UserName = event.EventData['UserName']
         UserID = event.EventData['UserID']
-        with open('bqb//' + str(random.randint(1,161)) + '.jpg', 'rb') as f:
+        with open('bqb//' + str(random.randint(1, 161)) + '.jpg', 'rb') as f:
             coding = base64.b64encode(f.read()).decode()
-            text = "\n[表情109][表情109]欢迎萌新：%s入群[表情109][表情109]\n入群请先修改群名片（如：ubuntu-XXX）\n 有什么问题请尽管提问,老撕鸡们会很热♂情的帮你们解答的"%UserName
-            action.send_group_pic_msg(toUser=event.FromUin,content=text,atUser=UserID,picBase64Buf=coding)
+            text = "\n[表情109][表情109]欢迎萌新：%s入群[表情109][表情109]\n入群请先修改群名片（如：ubuntu-XXX）\n 有什么问题请尽管提问,老撕鸡们会很热♂情的帮你们解答的" % UserName
+            action.send_group_pic_msg(toUser=event.FromUin, content=text, atUser=UserID, picBase64Buf=coding)
+
 
 @bot.on_group_msg
 @deco.in_content("获取个人信息")
-def get_detail(msg:GroupMsg):
+def get_detail(msg: GroupMsg):
     print(action.get_user_info(userID=msg.FromUserId))
     print(type(action.get_user_info(userID=msg.FromUserId)))
 

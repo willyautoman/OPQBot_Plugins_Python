@@ -1,0 +1,62 @@
+2020-10-08 21:55 INFO	Connecting to the server...
+2020-10-08 21:55 ERROR	连接失败
+Traceback (most recent call last):
+
+  File "D:\Program Files\JetBrains\PyCharm 2020.1.2\plugins\python\helpers\pydev\pydevd.py", line 2131, in <module>
+    main()
+    └ <function main at 0x000001B136E7F8B8>
+
+  File "D:\Program Files\JetBrains\PyCharm 2020.1.2\plugins\python\helpers\pydev\pydevd.py", line 2122, in main
+    globals = debugger.run(setup['file'], None, None, is_module)
+              │        │   │                          └ False
+              │        │   └ {'port': 5275, 'vm_type': None, 'client': '127.0.0.1', 'server': False, 'DEBUG_RECORD_SOCKET_READS': False, 'multiproc': True...
+              │        └ <function PyDB.run at 0x000001B136E7B8B8>
+              └ <__main__.PyDB object at 0x000001B125165A48>
+
+  File "D:\Program Files\JetBrains\PyCharm 2020.1.2\plugins\python\helpers\pydev\pydevd.py", line 1431, in run
+    return self._exec(is_module, entry_point_fn, module_name, file, globals, locals)
+           │    │     │          │               │            │     │        └ {'__name__': '__main__', '__doc__': None, '__package__': None, '__loader__': <_frozen_importlib_external.SourceFileLoader obj...
+           │    │     │          │               │            │     └ {'__name__': '__main__', '__doc__': None, '__package__': None, '__loader__': <_frozen_importlib_external.SourceFileLoader obj...
+           │    │     │          │               │            └ 'F:/PycharmProjects/OPQBot_Plugins_Python/BotCore.py'
+           │    │     │          │               └ None
+           │    │     │          └ ''
+           │    │     └ False
+           │    └ <function PyDB._exec at 0x000001B136E7B948>
+           └ <__main__.PyDB object at 0x000001B125165A48>
+
+  File "D:\Program Files\JetBrains\PyCharm 2020.1.2\plugins\python\helpers\pydev\pydevd.py", line 1438, in _exec
+    pydev_imports.execfile(file, globals, locals)  # execute the script
+    │             │        │     │        └ {'__name__': '__main__', '__doc__': None, '__package__': None, '__loader__': <_frozen_importlib_external.SourceFileLoader obj...
+    │             │        │     └ {'__name__': '__main__', '__doc__': None, '__package__': None, '__loader__': <_frozen_importlib_external.SourceFileLoader obj...
+    │             │        └ 'F:/PycharmProjects/OPQBot_Plugins_Python/BotCore.py'
+    │             └ <function execfile at 0x000001B136BCE8B8>
+    └ <module '_pydev_bundle.pydev_imports' from 'D:\\Program Files\\JetBrains\\PyCharm 2020.1.2\\plugins\\python\\helpers\\pydev\\...
+
+  File "D:\Program Files\JetBrains\PyCharm 2020.1.2\plugins\python\helpers\pydev\_pydev_imps\_pydev_execfile.py", line 18, in execfile
+    exec(compile(contents+"\n", file, 'exec'), glob, loc)
+                 │              │              │     └ {'__name__': '__main__', '__doc__': None, '__package__': None, '__loader__': <_frozen_importlib_external.SourceFileLoader obj...
+                 │              │              └ {'__name__': '__main__', '__doc__': None, '__package__': None, '__loader__': <_frozen_importlib_external.SourceFileLoader obj...
+                 │              └ 'F:/PycharmProjects/OPQBot_Plugins_Python/BotCore.py'
+                 └ 'import base64\nimport datetime\nimport json\nimport os\nimport random\nimport re\nimport threading\nimport time\nfrom time i...
+
+  File "F:/PycharmProjects/OPQBot_Plugins_Python/BotCore.py", line 246, in <module>
+    bot.run()
+    │   └ <function IOTBOT.run at 0x000001B13734CD38>
+    └ IOTBOT <1328382485> <host-http://127.0.0.1> <port-8888>
+
+> File "D:\Program Files\Python37\lib\site-packages\iotbot\client.py", line 192, in run
+    self.socketio.connect(f'{self.host}:{self.port}', transports=['websocket'])
+    │    │        └ <function Client.connect at 0x000001B137223AF8>
+    │    └ <socketio.client.Client object at 0x000001B138F9C908>
+    └ IOTBOT <1328382485> <host-http://127.0.0.1> <port-8888>
+
+  File "D:\Program Files\Python37\lib\site-packages\socketio\client.py", line 282, in connect
+    six.raise_from(exceptions.ConnectionError(exc.args[0]), None)
+    │   │          │          └ <class 'socketio.exceptions.ConnectionError'>
+    │   │          └ <module 'socketio.exceptions' from 'D:\\Program Files\\Python37\\lib\\site-packages\\socketio\\exceptions.py'>
+    │   └ <function raise_from at 0x000001B136891AF8>
+    └ <module 'six' from 'D:\\Program Files\\Python37\\lib\\site-packages\\six.py'>
+
+  File "<string>", line 3, in raise_from
+
+socketio.exceptions.ConnectionError: Connection error
